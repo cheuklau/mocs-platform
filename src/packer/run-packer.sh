@@ -1,28 +1,26 @@
 #!/bin/bash
 
-# Packer is used to generate the Kubernetes AMI. The same AMI is used for both
-# master and worker nodes. The rest of the setup including networking between 
-# the master and worker nodes is performed by Terraform after the EC2 instances 
-# are provisioned.
-
 # Parse input
 function usage() {
+	echo "Make sure Packer is installed and in PATH."
+	echo "Make sure environment variables AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are set."
 	echo "USAGE: $0 [--aws-region string] [--aws-instance-type string] [--help]"
-	echo "Examples:"
+	echo "EXAMPLE:"
 	echo "$0 --aws-region us-west-2 --aws-instance-type t2.medium"
-	echo "$0 --aws-region us-east-1 --aws-instance-type t2.micro"
 	exit 1
 }
 
+# Need at least four arguments
 if [ $# -lt 4 ]; then
 	usage
 fi
 
+# Parse two arguments at a time
 while [ $# -gt 0 ]
 do
 	case $1 in
 		--aws-region )
-            REGION=$2
+      REGION=$2
 			shift
 			shift
 			;;
@@ -51,15 +49,15 @@ cat << EOF | sudo tee kubernetes.json
     "aws_secret_key": "",
     "aws_region": "${REGION}",
     "aws_ami_image": "ami-ba602bc2",
-    "aws_instance_type": "${TYPE}",
+    "aws_instance_type": "${TYPE}"
   },
   "builders": [{
     "type": "amazon-ebs",
-    "access_key": "{{user `aws_access_key`}}",
-    "secret_key": "{{user `aws_secret_key`}}",
-    "region": "{{user `aws_region`}}",
-    "source_ami": "{{user `aws_ami_image`}}",
-    "instance_type": "{{user `aws_instance_type`}}",
+    "access_key": "{{user \`aws_access_key\`}}",
+    "secret_key": "{{user \`aws_secret_key\`}}",
+    "region": "{{user \`aws_region\`}}",
+    "source_ami": "{{user \`aws_ami_image\`}}",
+    "instance_type": "{{user \`aws_instance_type\`}}",
     "ssh_username": "ubuntu",
     "ami_name" : "kubernetes"
   }],
@@ -70,8 +68,8 @@ cat << EOF | sudo tee kubernetes.json
 }
 EOF
 
-# Build the Kubernetes AMI (same for master and worker nodes)
+# Build Kubernetes AMI
 packer build -machine-readable kubernetes.json | tee kubernetes.log
 
 # Clean up files
-rm kubernetes.json
+sudo rm kubernetes.json

@@ -6,6 +6,8 @@
 2. [Infrastructure-as-Code Tools](README.md#infrastructure-as-code-tools)
 3. [Data Engineering Tools](README.md#data-engineering-tools)
 4. [Use Cases](README.md#use-cases)
+5. [Current Work](README.md#current-work)
+6. [Completed Work](README.md#completed-work)
 
 ## Introduction
 
@@ -13,7 +15,7 @@ The goal of the monitored one-click solution (MOCS) platform is to automate the 
 
 ## Infrastructure-as-Code Tools
 
-In summary, [Terraform](https://www.terraform.io) and [Packer](https://www.packer.io/intro/) are used to provision a [Kubernetes](https://kubernetes.io) cluster on AWS. All of the required data engineering tools are deployed as a [Helm](https://helm.sh) application on Kubernetes. [Traefik](https://traefik.io)is used to route all external and internal traffic. [Prometheus](https://prometheus.io) will be used to monitor metrics (e.g., CPU, memory) on the cluster, application and pod level. [Elastic Stack](https://www.elastic.co) will be used for centralized logging. The official documentations are linked above. For more information on a specific techonology's usage see `/src/<technology>/README.md`. 
+In summary, [Terraform](https://www.terraform.io) and [Packer](https://www.packer.io/intro/) are used to provision a [Kubernetes](https://kubernetes.io) cluster on AWS. All of the required data engineering tools are deployed as a [Helm](https://helm.sh) application on Kubernetes. [Traefik](https://traefik.io) is used to route all external and internal traffic. [Prometheus](https://prometheus.io) will be used to monitor metrics (e.g., CPU, memory) on the cluster, application and pod level. [Elastic Stack](https://www.elastic.co) will be used for centralized logging. The official documentations are linked above. For more information on a specific techonology's usage see `/src/<technology>/README.md`. 
 
 ## Data Engineering Tools
 
@@ -55,3 +57,17 @@ load:
 ```
 
 To generate the recommended architecture: `mocs --plan airaware.yaml`. To provision the recommended architecture: `mocs --apply airaware.yaml`.
+
+## Completed Work
+
+- 1/1/2019: Wrote Packer input to generate Ubuntu Kubernetes AMI
+
+## Current Work
+
+- Write Terraform module to set up AWS environment
+- Write Terraform module to set up Kubernetes cluster using Kubernetes AMI
+
+## Future Work
+
+- Develop logic to determine size of Kubernetes cluster needed for a given pipeline
+- Write Python script to parse YAML input and apply logic to spin up required Kubernetes cluster
