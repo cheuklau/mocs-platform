@@ -6,8 +6,9 @@
 2. [Infrastructure-as-Code Tools](README.md#infrastructure-as-code-tools)
 3. [Data Engineering Tools](README.md#data-engineering-tools)
 4. [Use Cases](README.md#use-cases)
-5. [Current Work](README.md#current-work)
-6. [Completed Work](README.md#completed-work)
+5. [Completed Work](README.md#completed-work)
+6. [Current Work](README.md#current-work)
+7. [Completed Work](README.md#completed-work)
 
 ## Introduction
 
@@ -60,14 +61,14 @@ To generate the recommended architecture: `mocs --plan airaware.yaml`. To provis
 
 ## Completed Work
 
-- 1/1/2019: Wrote Packer input to generate Ubuntu Kubernetes AMI
+- 1/1/2019: Wrote and tested Packer input to generate Ubuntu Kubernetes AMI
+- 1/9/2019: Wrote and tested Terraform module to set up AWS environment
 
 ## Current Work
 
-- Write Terraform module to set up AWS environment
-- Write Terraform module to set up Kubernetes cluster using Kubernetes AMI
+- Write and test Terraform module to set up Kubernetes cluster using Kubernetes AMI
 
 ## Future Work
 
-- Develop logic to determine size of Kubernetes cluster needed for a given pipeline
+- Develop logic to capacity plan Kubernetes cluster needed for a given data pipeline
 - Write Python script to parse YAML input and apply logic to spin up required Kubernetes cluster

@@ -17,7 +17,7 @@ To generate the Kubernetes AMI using Packer:
 ```
 chmod +x run-packer.sh
 ```
-3. Run Packer build script:
+4. Run Packer build script:
 ```
 ./run-packer.sh --aws-region us-west-2 --aws-instance-type t2.medium 
 ```

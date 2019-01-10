@@ -1,8 +1,6 @@
-############################################################################
 # Kubernetes master nodes
-############################################################################
 resource "aws_instance" "kubernetes-master" {
-  ami = "${var.AMIS}"
+  ami = "${var.KUBE_AMI}"
   instance_type = "${var.AWS_TYPE}"
   key_name = "${var.KEY_NAME}"
   count = "${var.NUM_MASTERS}"
@@ -22,11 +20,9 @@ resource "aws_instance" "kubernetes-master" {
   }
 }
 
-############################################################################
 # Kubernetes workers nodes
-############################################################################
 resource "aws_instance" "kubernetes-worker" {
-  ami = "${var.AMIS}"
+  ami = "${var.KUBE_AMI}"
   instance_type = "${var.AWS_TYPE}"
   key_name = "${var.KEY_NAME}"
   count = "${var.NUM_WORKERS}"
@@ -46,9 +42,7 @@ resource "aws_instance" "kubernetes-worker" {
   }
 }
 
-############################################################################
-# Configure master
-############################################################################
+# Configure master nodes
 resource "null_resource" "kubernetes-master" {
 
   count = "${var.NUM_MASTERS}"
@@ -56,7 +50,7 @@ resource "null_resource" "kubernetes-master" {
   # Establish connection to master
   connection {
     type = "ssh"
-    user = "ubuntu"    
+    user = "ubuntu"
     host = "${element(aws_instance.kubernetes-master.*.public_ip, "${count.index}")}"
     private_key = "${file("${var.PATH_TO_PRIVATE_KEY}")}"
   }
@@ -65,6 +59,7 @@ resource "null_resource" "kubernetes-master" {
   depends_on = [ "aws_instance.kubernetes-master", "aws_instance.kubernetes-worker" ]
 
   # Execute master configuration remotely
+  # Note: We copy the worker join command to a text file which will be used later by the worker nodes
   provisioner "remote-exec" {
     inline = [
       echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
@@ -78,10 +73,10 @@ resource "null_resource" "kubernetes-master" {
   }
 }
 
-############################################################################
 # Configure workers
-############################################################################
 resource "null_resource" "kubernetes-workers" {
+
+  count = "${var.NUM_WORKERS}"
 
   # Establish connection to workers
   connection {
@@ -94,7 +89,7 @@ resource "null_resource" "kubernetes-workers" {
   # Need the masters configured first
   depends_on = [ "null_resource.kubernetes-master" ]
 
-  # Get join command from Kubernetes master node (either one works)
+  # Get join command from a Kubernetes master node
   provisioner "local-exec" {
     inline = [
       scp -i ${file("${var.PATH_TO_PRIVATE_KEY}")} ubuntu@"${aws_instance.kubernetes-master.0.public_ip}":join_command.txt .

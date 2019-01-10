@@ -1,6 +1,4 @@
-############################################################################
-# Declare required variables
-############################################################################
+# Declare variables
 
 variable "AWS_ACCESS_KEY" {}
 variable "AWS_SECRET_KEY" {}
