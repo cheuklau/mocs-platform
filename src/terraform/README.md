@@ -23,6 +23,7 @@ chmod +x run-terraform.sh
 ssh-keygen -f mykey
 ```
 The above command creates `mykey` and `mykey.pub`.
+
 5. Run the Terraform build script:
 ```
 ./run-terraform.sh --aws-region us-west-2 \
